@@ -7,6 +7,7 @@ module Data.List.Trace
   , fromList
   , head
   , tail
+  , mapMaybe
   , filter
   , length
   ) where
@@ -51,6 +52,13 @@ filter  fn (Cons b o) =
 length :: Trace a b -> Int
 length (Cons _ o) = (+) 1 $! length o
 length  Nil {}    = 0
+
+mapMaybe :: (b -> Maybe c) -> Trace a b -> Trace a c
+mapMaybe _ (Nil a) = Nil a
+mapMaybe f (Cons b t) =
+  case f b of
+    Just b'  -> Cons b' (mapMaybe f t)
+    Nothing -> mapMaybe f t
 
 toList :: Trace a b -> [b]
 toList = bifoldr (\_ bs -> bs) (:) []
