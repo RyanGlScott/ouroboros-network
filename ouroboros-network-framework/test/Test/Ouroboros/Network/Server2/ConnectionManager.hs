@@ -155,6 +155,35 @@ verifyAbstractTransitionOrder (h:t) = go t h
               (property (currToState == nextFromState)))
          <> go ts next
 
+-- Assuming all transitions in the transition list are valid, we only need to
+-- look at the 'toState' of the current transition and the 'fromState' of the
+-- next transition.
+--
+-- NOTE: This version is to be used by Diffusion
+verifyAbstractTransitionOrder' :: [AbstractTransition]
+                               -> AllProperty
+verifyAbstractTransitionOrder' [] = mempty
+verifyAbstractTransitionOrder' (h:t) = go t h
+  where
+    go :: [AbstractTransition] -> AbstractTransition -> AllProperty
+    -- All transitions must end in the 'UnknownConnectionSt', however since this
+    -- going to be used by diffusion test where the trace to be evaluated is
+    -- possibly truncated we can not be certain that the last transition is
+    -- going to end in 'UnknownConnectionSt'.
+    go [] (Transition _ _)          =
+      AllProperty (property True)
+
+    -- All transitions have to be in a correct order, which means that the
+    -- current state we are looking at (current toState) needs to be equal to
+    -- the next 'fromState', in order for the transition chain to be correct.
+    go (next@(Transition nextFromState _) : ts)
+        curr@(Transition _ currToState) =
+         AllProperty
+           (counterexample
+              ("\nUnexpected transition order!\nWent from: "
+              ++ show curr ++ "\nto: " ++ show next)
+              (property (currToState == nextFromState)))
+         <> go ts next
 
 -- | Split 'AbstractTransitionTrace' into seprate connections.  This relies on
 -- the property that every connection is terminated with 'UnknownConnectionSt'.
