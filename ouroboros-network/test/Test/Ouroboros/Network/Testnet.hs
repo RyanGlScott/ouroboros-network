@@ -60,8 +60,8 @@ import           Test.Ouroboros.Network.Server2.Utils
                      classifyNegotiatedDataFlow, classifyEffectiveDataFlow,
                      classifyTermination, classifyActivityType)
 import           Test.Ouroboros.Network.Server2.ConnectionManager
-                     (verifyAbstractTransition, splitConns,
-                     verifyAbstractTransitionOrder')
+                     (verifyAbstractTransition,
+                     verifyAbstractTransitionOrder', groupConns)
 import           Test.QuickCheck (Property, counterexample, conjoin)
 import           Test.Tasty
 import           Test.Tasty.QuickCheck (testProperty)
@@ -669,7 +669,7 @@ prop_diffusion_cm_valid_transitions defaultBearerInfo diffScript =
               }
            )
         . fmap (map ttTransition)
-        . splitConns id
+        . groupConns id
         $ abstractTransitionEvents
 
 
@@ -722,7 +722,7 @@ prop_diffusion_cm_valid_transition_order defaultBearerInfo diffScript =
             (const mempty)
             verifyAbstractTransitionOrder'
          . fmap (map ttTransition)
-         . splitConns id
+         . groupConns id
          $ abstractTransitionEvents
 
 -- Utils
