@@ -1037,7 +1037,7 @@ mkSnocket state tr = Snocket { getLocalAddr
                                   (TestAddress addr)
         accept_ time deltaAndIOErrType = Accept $ do
             ctime <- getMonotonicTime
-            bracketOnError
+            bracketOnErrorMasked
               (atomically $ do
                 fd <- readTVar fdVar
                 case fd of
@@ -1315,6 +1315,18 @@ mkSnocket state tr = Snocket { getLocalAddr
 --
 -- Utils
 --
+
+-- | Unlike 'bracketOnError' it does not unmask exceptions for the in between
+-- action.
+bracketOnErrorMasked :: MonadMask m
+                     => m a
+                     -> (a -> m b)
+                     -> (a -> m c)
+                     -> m c
+bracketOnErrorMasked before after thing = mask_ $ do
+  a <- before
+  thing a `onException` after a
+
 
 hush :: Either a b -> Maybe b
 hush Left {}   = Nothing
