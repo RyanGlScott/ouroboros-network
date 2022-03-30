@@ -1,0 +1,48 @@
+cabal-version:      2.4
+name:               rgs-sandbox
+version:            0.1.0.0
+synopsis:
+
+-- A longer description of the package.
+-- description:
+homepage:
+
+-- A URL where users can report bugs.
+-- bug-reports:
+license:            BSD-3-Clause
+license-file:       LICENSE
+author:             Ryan Scott
+maintainer:         rscott@galois.com
+
+-- A copyright notice.
+-- copyright:
+category:           Testing
+extra-source-files: CHANGELOG.md
+
+benchmark rgs-sandbox
+    type:             exitcode-stdio-1.0
+    main-is:          Main.hs
+    other-modules:    HACKY
+                      Embedded.Roundtrip.EmbeddedCBOR
+                      Embedded.Roundtrip.Normal
+                      Embedded.Roundtrip.SerialisedCBOR
+
+    -- LANGUAGE extensions used by modules in this package.
+    -- other-extensions:
+    build-depends:    base >= 4 && < 5
+                    , base64
+                    , bytestring
+                    , cardano-ledger-byron
+                    , cardano-ledger-core
+                    , cborg
+                    , containers
+                    , criterion
+                    , deepseq
+                    , serialise
+                    , ouroboros-consensus
+                    , ouroboros-consensus-byron
+                    , ouroboros-consensus-cardano
+                    , ouroboros-consensus-shelley
+    hs-source-dirs:   app
+    default-language: Haskell2010
+    ghc-options:      -Wall -threaded -rtsopts

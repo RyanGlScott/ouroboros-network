@@ -26,6 +26,7 @@ packages: ./typed-protocols
           ./strict-stm
           ./ntp-client
           ./cardano-client
+          ./rgs-sandbox
 
 constraints:
     ip < 1.5
@@ -275,3 +276,9 @@ source-repository-package
   location: https://github.com/input-output-hk/flat
   tag: ee59880f47ab835dbd73bea0847dab7869fc20d8
   --sha256: 1lrzknw765pz2j97nvv9ip3l1mcpf2zr4n56hwlz0rk7wq7ls4cm
+
+source-repository-package
+  type: git
+  location: https://github.com/RyanGlScott/cborg
+  subdir: cborg
+  tag: 99ad0e42f01107ecfeb8a6d2bc1e7d52bd1c868d
